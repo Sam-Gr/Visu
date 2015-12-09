@@ -39,7 +39,7 @@ class City {
     return dist(this.windowX, this.windowY, px, py) <= this.ellipseRadius + 1;
   }
   
-  private float getEllipseRadius(float pop, float minPopulation, float maxPopulation) {
+  public float getEllipseRadius(float pop, float minPopulation, float maxPopulation) {
     float ellipseArea = map(pop, minPopulation, maxPopulation, 4, 10000);
     return sqrt(ellipseArea / PI);
   }

@@ -24,7 +24,7 @@ void setup() {
   size(1400,800);
   readData();
   
-  popSlider = new HScrollbar(850, 450, 500, 200, 16, 220, 1);
+  popSlider = new HScrollbar(850, 590, 500, 200, 16, 220, 1);
   popSlider.makeHistogram(cities, minPopulation, maxPopulation);
 }
 
@@ -37,7 +37,7 @@ void draw() {
   fill(10,10,10);
   textSize(20);
   textAlign(CENTER,TOP);
-  text(s, 400, 5);
+  text(s, 1100, 450);
   
   for (int i = 0 ; i < cities.length ; i++) {
     //set((int) mapX(x[i]), (int) mapY(y[i]), black);
@@ -51,12 +51,80 @@ void draw() {
   popSlider.update();
   popSlider.display();
   
+  drawDensityLegend();
+  drawPopulationLegend();
+  
   //println(popSlider.getVal());
   //println(popSlider.sposMin + " ; " + popSlider.getPos() + " ; " + popSlider.sposMax);
 }
 
-void drawLegend() {
+void drawPopulationLegend() {
+  int barWidth = 500;
+  int barHeight = 50;
+  int x = 850, y = 100;
+  int [] popTemoin = {10, 5000, 10000, 20000, 50000, 100000, 250000, 500000, 1000000, 2000000};
+  float ellipseArea;
+  float [] ellipsesRadius;
   
+  colorMode(RGB, 255, 255, 255);
+  noFill();
+  strokeWeight(1);
+  stroke(0,0,0);
+  float offset = 0.0;
+  float totalDiameter = 0.0;
+  ellipsesRadius = new float[popTemoin.length];
+  
+  for (int i=0 ; i < ellipsesRadius.length ; i++) {
+    ellipseArea = map(popTemoin[i], minPopulation, maxPopulation, 4, 10000);
+    ellipsesRadius[i] = sqrt(ellipseArea / PI);
+    totalDiameter += ellipsesRadius[i] * 2;
+  }
+  
+  float sizeInterval = (barWidth - totalDiameter) / (popTemoin.length - 1);
+  
+  for (int i=0 ; i < popTemoin.length ; i++) {
+    offset += ellipsesRadius[i];
+    ellipse(x + offset, y + barHeight / 2, ellipsesRadius[i]*2, ellipsesRadius[i]*2);
+    offset += ellipsesRadius[i] + sizeInterval;
+  }
+  
+  textAlign(CENTER, TOP);
+  text("Population", x + barWidth / 2, y + barHeight + 40);
+  text("-", x + 100, y + barHeight + 40);
+  text("+", x + barWidth - 100, y + barHeight + 40);
+}
+
+void drawDensityLegend() {
+  int barWidth = 500;
+  int barHeight = 50;
+  int x = 850, y = 290;
+  float ratio;
+  
+  colorMode(HSB, 360, 100, 100, 255);
+  rectMode(CORNER);
+  noFill();
+  rect(x, y, barWidth, barHeight);
+  
+  for (int i=1 ; i<barWidth ; i++) {
+    ratio = (float(i-1) / float(barWidth - 2)) * 100;
+    println(ratio);
+    stroke(7, ratio, 100, 212);
+    line(x+i, y+1, x+i, y + barHeight - 1);
+  }
+  
+  colorMode(RGB, 255, 255, 255, 255);
+  textSize(16);
+  fill(10, 10, 10, 255);
+  
+  textAlign(CENTER, TOP);
+  text("Densité", x + barWidth / 2, y + barHeight + 10);
+  text("-", x + 100, y + barHeight + 10);
+  text("+", x + barWidth - 100, y + barHeight + 10);
+  
+  /*textAlign(CENTER, CENTER);
+  text("Densité", x + barWidth / 2, y + barHeight/2);
+  text("-", x + 100, y + barHeight/2);
+  text("+", x + barWidth - 100, y + barHeight/2);*/
 }
 
 void readData() {
