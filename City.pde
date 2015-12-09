@@ -13,7 +13,7 @@ class City {
   
   boolean isSelected;
   
-  private float ellipseRadius;
+  float ellipseRadius;
   
   public City(int pc, float x, float y, float windowX, float windowY, String name, float population, float surface, float altitude) {
     this.postalCode = pc;
@@ -38,18 +38,22 @@ class City {
   public boolean contains(int px, int py) {
     return dist(this.windowX, this.windowY, px, py) <= this.ellipseRadius + 1;
   }
+  
+  private float getEllipseRadius(float pop, float minPopulation, float maxPopulation) {
+    float ellipseArea = map(pop, minPopulation, maxPopulation, 4, 10000);
+    return sqrt(ellipseArea / PI);
+  }
 
 // put a drawing function in here and call from main drawing loop
   public void draw(float minPopulation, float maxPopulation, 
                    float minDensity, float maxDensity, 
                    float minAltitude, float maxAltitude ) {
-    float ellipseArea, ellipseRadius;
+                     
     int saturation, hue;
     float strokeW;
     int rectHeight = 20;
     
-    ellipseArea = map(this.population, minPopulation, maxPopulation, 4, 10000);
-    this.ellipseRadius = sqrt(ellipseArea / PI);
+    this.ellipseRadius = this.getEllipseRadius(this.population, minPopulation, maxPopulation);
     
     colorMode(HSB, 255, 255, 255);
     //saturation = (int) map(this.density, minDensity, maxDensity, 0, 255);
@@ -81,5 +85,9 @@ class City {
     fill(7, saturation, 255, 212);
     
     ellipse(this.windowX, this.windowY, this.ellipseRadius*2, this.ellipseRadius*2);
+  }
+  
+  public void drawPopLegend(float x, float y) {
+    
   }
 }

@@ -11,7 +11,10 @@ class HScrollbar {
   int borderStroke = 3;
   int [] popHistogram;
   int [] histHues;
+  float histIntervalSize;
   int maxHistVal;
+  int [] popGrads = {10, 100, 1000, 10000, 100000, 1000000};
+  int [] nbVilleGrads = {100, 200, 300, 400};
 
   HScrollbar (float xp, float yp, int sw, int sh, int cw, int ch, int l) {
     swidth = sw;
@@ -80,11 +83,51 @@ class HScrollbar {
         }
         
         float histValRatio = ((float) this.popHistogram[i]) / this.maxHistVal;
-        stroke(this.histHues[i], 100, 100);
+        //histValRatio = 1.0;
+        stroke(this.histHues[i], 100, 95);
         
         line(x, ypos + sheight - this.borderStroke/2 - 1, x, ypos + this.borderStroke/2 + 1 + (histHeight * (1.0 - histValRatio)));
       }
     }
+    
+    // Axes
+    colorMode(RGB, 255, 255, 255);
+    fill(10,10,10);
+    stroke(10,10,10);
+    textSize(12);
+    textAlign(CENTER,TOP);
+    float yPopGrads = this.ypos + this.sheight + this.borderStroke / 2;
+    line(sposMin, yPopGrads, sposMin, yPopGrads + 10);
+    text("0", sposMin, yPopGrads+12);
+    
+    for (int i=0 ; i < this.popGrads.length ; i++) {
+      float xPopGrad = sposMin + log(this.popGrads[i]) / this.histIntervalSize;
+      line(xPopGrad, yPopGrads, xPopGrad, yPopGrads + 10);
+      text(this.popGrads[i], xPopGrad, yPopGrads+12);
+    }
+    
+    float xNbVilleGrads = this.xpos - this.borderStroke/2;
+    float ynbVilleGrad = ypos +this.borderStroke/2 + 1 + histHeight;
+    textAlign(RIGHT, CENTER);
+    text("0", xNbVilleGrads-12, ynbVilleGrad);
+    line(xNbVilleGrads-10, ynbVilleGrad, xNbVilleGrads, ynbVilleGrad);
+    
+    for (int i=0 ; i<this.nbVilleGrads.length ; i++) {
+      float histValRatio = ((float) this.nbVilleGrads[i]) / this.maxHistVal;
+      ynbVilleGrad = ypos +this.borderStroke/2 + 1 + histHeight*(1.0 - histValRatio);
+      text(this.nbVilleGrads[i], xNbVilleGrads-12, ynbVilleGrad);
+      line(xNbVilleGrads-10, ynbVilleGrad, xNbVilleGrads, ynbVilleGrad);
+    }
+    
+    textSize(18);
+    textAlign(CENTER,TOP);
+    text("Nombre d'habitants", xpos + swidth / 2, ypos + sheight + 30);
+    textAlign(CENTER,CENTER);
+    pushMatrix();
+    translate(xpos - 55, ypos + sheight / 2);
+    rotate(-HALF_PI);
+    text("Nombre de villes", 0,0);
+    popMatrix();
     
     // Curseur
     colorMode(RGB, 255, 255, 255);
@@ -113,10 +156,22 @@ class HScrollbar {
     return spos - sposMin;
   }
   
+  float getVal() {
+    float pos = this.getPos();    
+    float threshold = exp(pos * histIntervalSize);
+    
+    return threshold;
+  }
+  
+  /*void setVal(float newVal) {
+    this.spos = log(newVal)/this.getPos();
+    this.spos = constrain(this.spos, this.sposMin, this.sposMax);
+  }*/
+  
   void makeHistogram(City[] cities, float minPopulation, float maxPopulation) {
     int nbBins = this.swidth - this.borderStroke;
-    float histIntervalSize = log(maxPopulation - minPopulation) / nbBins;
-    println(log(maxPopulation));
+    this.histIntervalSize = log(maxPopulation - minPopulation) / nbBins;
+    println(maxPopulation);
     println(log(minPopulation));
     this.popHistogram = new int[nbBins];
     this.histHues = new int[nbBins];
@@ -128,11 +183,11 @@ class HScrollbar {
       this.popHistogram[idx]++;
     }
     
-    float hueStep = 360.0 / nbBins;
+    float hueStep = 120.0 / nbBins;
     
     this.maxHistVal = -1;
     for (int i=0 ; i < nbBins ; i++) {
-      this.histHues[i] = Math.round(i*hueStep);
+      this.histHues[i] = 120 - Math.round(i*hueStep);
       if (this.popHistogram[i] > this.maxHistVal)
         this.maxHistVal = this.popHistogram[i] ;
     }

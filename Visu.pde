@@ -21,16 +21,17 @@ City selectedCity = null;
 HScrollbar popSlider;
 
 void setup() {
-  size(1200,800);
+  size(1400,800);
   readData();
   
-  popSlider = new HScrollbar(750, 100, 400, 100, 16, 110, 1);
+  popSlider = new HScrollbar(850, 450, 500, 200, 16, 220, 1);
   popSlider.makeHistogram(cities, minPopulation, maxPopulation);
 }
 
 void draw() {
   background(255);
   color black = color(0);
+  minPopulationToDisplay = (float) Math.round(popSlider.getVal());
   String s = "Afficher les populations supérieures à "+ (int) minPopulationToDisplay;
   
   fill(10,10,10);
@@ -50,7 +51,12 @@ void draw() {
   popSlider.update();
   popSlider.display();
   
-  //println(popSlider.getPos());
+  //println(popSlider.getVal());
+  //println(popSlider.sposMin + " ; " + popSlider.getPos() + " ; " + popSlider.sposMax);
+}
+
+void drawLegend() {
+  
 }
 
 void readData() {
@@ -109,16 +115,20 @@ float mapY(float y) {
   return map(y, minY, maxY, 750, 50);
 }
 
-void keyPressed() {
+/*void keyPressed() {
   if (key == CODED) {
-    if (keyCode == UP)
+    if (keyCode == UP) {
       minPopulationToDisplay *= 2;
-    else if (keyCode == DOWN && minPopulationToDisplay > 1)
+      popSlider.setVal(minPopulationToDisplay);
+    }
+    else if (keyCode == DOWN && minPopulationToDisplay > 1) {
       minPopulationToDisplay /= 2;
+      popSlider.setVal(minPopulationToDisplay);
+    }
       
     redraw();
   }
-}
+}*/
 
 void mouseMoved() {
   City c = pick(mouseX, mouseY);
