@@ -6,6 +6,10 @@ application de visualisation de données sur les villes de France. Nous avons d�
 faire des choix de variables visuelles pour représenter certaines grandeurs, 
 elles aussi choisis judicieusement.
 
+### Exécution
+	Je n'ai pas réussi à exporter l'application correctement. Il faut donc ouvrir 
+le projet avec Processing (fichier Visu.pde) et le lancer via Processing.
+
 ## Grandeurs représentées
 
 	Les villes sont représentées par des cercles à remplissage transparent pour 
