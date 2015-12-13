@@ -68,3 +68,11 @@ le nombre d'habitants. De plus, un curseur est présent sur cet histogramme. Il
 permet de fixer le seuil décrit plus haut. On peut le bouger en faisant un 
 cliquer-déplacer avec la souris et le seuil, ainsi que l'affichage des villes 
 correspondant, se mettent à jour dynamiquement.
+
+## Sources
+
+J'ai utilisé le code de scroll bar du lien suivant :
+	https://processing.org/examples/scrollbar.html
+
+J'ai grandement modifié ce code pour obtenir le rendu et l'interaction de 
+l'histogramme.
